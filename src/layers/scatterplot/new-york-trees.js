@@ -8,7 +8,7 @@ const initialViewState = {
     bearing: 0
 };
 
-const layer = new ScatterplotLayer({
+const layerOptions = {
     id: 'scatterplot-tree-layer',
     data: 'https://data.cityofnewyork.us/resource/5rq2-4hqu.json?$limit=65000&&boroname=Manhattan',
     getPosition: d => d.the_geom.coordinates,
@@ -21,9 +21,10 @@ const layer = new ScatterplotLayer({
     radiusMinPixels: 1,
     radiusMaxPixels: 100,
     lineWidthMinPixels: 1    
-});
+}
 
 export const NewYorkTreesLayer = {
-    layer,
-    initialViewState
+    layerOptions,
+    initialViewState,
+    LayerClass: ScatterplotLayer,
 };

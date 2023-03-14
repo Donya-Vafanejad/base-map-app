@@ -2,11 +2,25 @@ import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import Map from 'react-map-gl'
 import DeckGL from '@deck.gl/react';
-import { NewYorkTreesLayer } from '../layers/scatterplot/new-york-trees'
+import {useState} from 'react';
+import { LosAngelesActiveBusinessLayer } from '../layers/hexagon/Los-angeles-active-businesses'
+import { NewYorkTreesLayer } from '@/layers/scatterplot/new-york-trees';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoieXV5YWZ1amltb3RvIiwiYSI6ImNsZWdyZDA4NTA1ZGwzeG53Y2c2OGY0bjAifQ._mbKMYj_moCfX1GcJmxAJg'
 
+const layers = {
+  '1': NewYorkTreesLayer,
+  '2': LosAngelesActiveBusinessLayer
+}
+
 export default function Home() {
+
+  const [layerId, setLayerId] = useState('2');
+  const {LayerClass, layerOptions} = layers[layerId];
+
+  const layer = new LayerClass(layerOptions);
+
+  
   return (
     <>
       <Head>
@@ -16,10 +30,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
+        <div style={{zIndex:10000}}>
+          <button onClick={() => setLayerId('1')}>New York Trees</button>
+          <button onClick={() => setLayerId('2')}>Los Angeles Active Businesses</button>
+        </div>
         <DeckGL
-          initialViewState={NewYorkTreesLayer.initialViewState}
+          initialViewState={layer.initialViewState}
           controller={true}
-          layers={[NewYorkTreesLayer.layer]}
+          layers={[layer.layer]}
         >
           <Map
             style={{width: '100vw', height: '100vh'}}
